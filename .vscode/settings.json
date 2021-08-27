@@ -1,4 +1,9 @@
 {
     "vim.useSystemClipboard": true,
-    "vva.trustedDomain": false
+    "vva.trustedDomain": false,
+    "files.associations": {
+        "stdlib.h": "c",
+        "stdio.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Enabled"
 }
