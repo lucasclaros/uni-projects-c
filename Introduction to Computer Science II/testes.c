@@ -5,7 +5,7 @@ char *read_line();
 
 int main(){
     char *teste = NULL;
-    teste = read_line();
+    teste = read_line(); //blablalba
     printf("%s\n", teste);
     free(teste);
     return 0;
