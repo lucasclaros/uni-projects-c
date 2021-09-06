@@ -10,3 +10,4 @@ int isEmpty(stack_t *);
 int push(stack_t *, elem);
 int pop(stack_t *, elem *);
 int top(stack_t *, elem *);
+void printStack(stack_t *);

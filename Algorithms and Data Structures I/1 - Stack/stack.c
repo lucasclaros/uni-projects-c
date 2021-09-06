@@ -15,6 +15,16 @@ stack_t *create(){
     return p; 
 }
 
+void printStack(stack_t *p){
+    while (!isEmpty(p))
+    {
+        int x;
+        pop(p, &x);
+        printf("%d ", x);
+    }
+    printf("\n");
+}
+
 void destroy(stack_t *p){
 
     if(p != NULL) free(p);
