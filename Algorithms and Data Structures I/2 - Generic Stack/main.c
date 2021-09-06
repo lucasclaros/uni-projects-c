@@ -2,38 +2,37 @@
  *   Author: Lucas da Silva Claros
  *   nUSP: 12682592
  *   Create Time: 06/09/2021 15:50
- *   Modified time: 06/09/2021 16:37
+ *   Modified time: 06/09/2021 17:11
  *   Description: 
- *      Learning about Stack with decimal to binary conversion
+ *          Learning Generic Stack    
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "stack.h"
 
-stack_t *convertToBinary(int);
+typedef struct coordinates
+{
+    int x, y;
+}coords_t;
 
 int main(){
 
-    int decimal;
-    scanf("%d", &decimal);
-    stack_t *binary = convertToBinary(decimal);
-    printStack(binary);
-    destroy(binary);
-    return 0;
-}
+    stack_t *p = create(sizeof(coords_t));
+    coords_t coords;
 
-
-stack_t *convertToBinary(int decimal){
-    stack_t *p;
-    p = create();
-    while (decimal >= 2)
+    for (int i = 0; i < 10; i++)
     {
-        elem reminder;
-        reminder = decimal % 2;
-        push(p, reminder);
-        decimal = decimal / 2;
+        coords.x = i;
+        coords.y = 2*i;
+        push(p, &coords);
     }
-    push(p, decimal);
-    return p;
+
+    while (!isEmpty(p))
+    {
+        pop(p, &coords);
+        printf("(%d, %d)\n", coords.x, coords.y);
+    }
+    destroy(p);
+    return 0;
 }

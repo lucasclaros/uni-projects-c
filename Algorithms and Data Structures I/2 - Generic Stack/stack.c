@@ -1,32 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include "stack.h"
 
 struct stack { 
     int top;
-    elem stack[SIZE_STACK];
+    void **stack;
+    int elementSize;
 };
 
-stack_t *create(){
+stack_t *create(int elementSize){
     stack_t *p = (stack_t *)malloc(sizeof(stack_t));
     assert(p != NULL);
-    p->top = -1;
-    return p; 
-}
 
-void printStack(stack_t *p){
-    while (!isEmpty(p))
-    {
-        int x;
-        pop(p, &x);
-        printf("%d ", x);
-    }
-    printf("\n");
+    p->stack = (void **)malloc(sizeof(void *) * SIZE_STACK);
+    assert(p->stack != NULL);
+
+    p->top = -1;
+    p->elementSize = elementSize;
+
+    return p; 
 }
 
 void destroy(stack_t *p){
 
+    while (!isEmpty(p))
+    {
+        free(p->stack[p->top]);
+        p->stack[p->top] = NULL;
+        p->top--;
+    }
+    if(p->stack != NULL) free(p->stack);
     if(p != NULL) free(p);
     p = NULL;
 
@@ -50,34 +55,38 @@ int isEmpty(stack_t *p){
         return 0;
 }
 
-int push(stack_t *p, elem x){
+int push(stack_t *p, void *x){
     assert(p != NULL);
 
     if(isFull(p) == 1)
         return -1;
 
     p->top++;
-    p->stack[p->top] = x;
+    p->stack[p->top] = (void *)malloc(p->elementSize);
+    assert(p->stack[p->top] != NULL);
+
+    memcpy(p->stack[p->top], x, p->elementSize);
     return 1;
 }
 
-int pop(stack_t *p, elem *x){
+int pop(stack_t *p, void *x){
     assert(p != NULL);
 
     if(isEmpty(p) == 1)
         return -1;
 
-    *x = p->stack[p->top];
+    memcpy(x, p->stack[p->top], p->elementSize);
+    free(p->stack[p->top]);
     p->top--;
     return 1;
 }
 
-int top(stack_t *p, elem *x){
+int top(stack_t *p, void *x){
     assert(p != NULL);
 
     if(isEmpty(p) == 1)
         return -1;
 
-    *x = p->stack[p->top];
+    memcpy(x, p->stack[p->top], p->elementSize);
     return 1;
 }
