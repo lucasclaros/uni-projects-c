@@ -1,26 +1,27 @@
-#include <stdio.h>
-#include <stdlib.h>
+/*    
+ * Book Activity: log base 2
+ * Lucas da S. Claros - 12682592
+ * Course: SCC0201 
+ */
 
-char *read_line();
+#include <stdio.h>
+ 
+
+/*
+ *   
+ *
+ */
+int log2(int n){
+    if(n < 2)
+        return 0;
+    else return 1 + lg(n/2);
+}
 
 int main(){
-    char *teste = NULL;
-    teste = read_line(); //blablalba
-    printf("%s\n", teste);
-    free(teste);
+    int number;
+    scanf("%d", &number);
+    number = log2(number);
+    printf("%d\n", number);
     return 0;
 }
 
-
-char *read_line(){
-    int c,k=0;
-    char *linha = NULL;
-    while((c=getchar()) != EOF && c != '\n')
-    {
-        linha = realloc(linha, (k+1) * sizeof(char));
-        linha[k++] = c;
-    }
-    linha = realloc(linha, (k+1) * sizeof(char));
-    linha[k] = '\0';
-    return linha;
-}
