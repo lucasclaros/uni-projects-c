@@ -1,8 +1,8 @@
-/**
+ /**
  *   Author: Lucas da Silva Claros
  *   nUSP: 12682592
  *   Create Time: 11/09/2021 06:40
- *   Modified time: 13/09/2021 22:39
+ *   Modified time: 13/09/2021 20:42
  *   Description: Minesweeper Simulator
  */
 
@@ -22,21 +22,18 @@ typedef struct board
 } board_t;
 
 char *read_line();
-char *read_line_file(FILE *, int *);
-void read_board (board_t *);
-void print_board(board_t *);
-void load_tips  (board_t *);
+char *read_line_file  (FILE *, int *);
+void read_board       (board_t *);
+void print_board      (board_t *);
+void load_tips        (board_t *); 
 void check_neighbors  (board_t *, int, int);
-void prepare_board (board_t *, int, int, int);
-void player_move(board_t *);
-void fill_board (board_t *, int, int);
 
 int main(){
     board_t *board;
     board = malloc(sizeof(board_t));
     board->isEOF = 0;
-
     board->matrix = NULL;
+
     int option;
     scanf("%d", &option);
     getchar();
@@ -50,7 +47,6 @@ int main(){
     {
         case 1: print_board (board); break;
         case 2: load_tips   (board); print_board(board); break;
-        case 3: player_move (board); print_board(board); break;
         default: break;
     }
 
@@ -78,13 +74,15 @@ char *read_line(){
 char *read_line_file(FILE *file, int *isEOF){
     char *line = NULL;
     int c, k = 0; // letters
-    while ((c = fgetc(file)) != EOF && c != '\n')
+    while ((c = fgetc(file)) != '\n')
     {
         line = realloc(line, (k+1) * sizeof(char));
         line[k++] = c;
     }
+
     if ((c = fgetc(file)) == EOF) *isEOF = 1;
     else ungetc(c, file);
+
     line = realloc(line, (k+1) * sizeof(char));
     line[k] = '\0';
     return line;
@@ -152,54 +150,3 @@ void check_neighbors(board_t *board, int row, int col){
 
 }
 
-void player_move(board_t *board){
-    scanf("%d %d", &board->posY, &board->posX);
-    getchar();
-
-    load_tips(board);
-
-    char position = board->matrix[board->posY][board->posX];
-    if (position == BOMB)
-        return;
-    else if (position == BLANK_SPACE)
-    {
-        prepare_board(board, board->posY, board->posX, 1);
-        fill_board(board, board->posY, board->posX);
-    }
-    else
-        prepare_board(board, board->posY, board->posX, 0);
-}
-
-void prepare_board(board_t *board, int posY, int posX, int tipsRevealed){
-    for (int row = 0; row < board->lines; row++)
-    {
-        for (int col = 0; col < strlen(board->matrix[0]); col++)
-        {
-            if(tipsRevealed == 1)
-            {
-                if (board->matrix[row][col] == BLANK_SPACE || board->matrix[row][col] == BOMB)
-                    board->matrix[row][col] = UNREVEALED;
-            }
-            else
-            {
-                if (row == posY && col == posX)
-                    continue;
-                else
-                    board->matrix[row][col] = UNREVEALED;
-            }
-        }
-    }
-}
-
-void fill_board(board_t *board, int posY, int posX){
-    if (board->matrix[posY][posX] == UNREVEALED)
-        board->matrix[posY][posX] = BLANK_SPACE;   
-    if (posY+1 < board->lines && board->matrix[posY+1][posX] == UNREVEALED)
-        fill_board(board, posY+1, posX);
-    if (posY-1 >= 0 && board->matrix[posY-1][posX] == UNREVEALED)
-        fill_board(board, posY-1, posX);
-    if (posX+1 < strlen(board->matrix[0]) && board->matrix[posY][posX+1] == UNREVEALED)
-        fill_board(board, posY, posX+1);
-    if (posX-1 >= 0 && board->matrix[posY][posX-1] == UNREVEALED)
-        fill_board(board, posY, posX-1);
-}
