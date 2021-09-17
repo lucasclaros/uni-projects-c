@@ -2,7 +2,7 @@
  *   Author: Lucas da Silva Claros
  *   nUSP: 12682592
  *   Create Time: 06/09/2021 15:50
- *   Modified time: 06/09/2021 16:37
+ *   Modified time: 17/09/2021 01:59
  *   Description: 
  *      Learning about Stack with decimal to binary conversion
  */
