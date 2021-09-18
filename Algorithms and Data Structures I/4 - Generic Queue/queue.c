@@ -3,6 +3,11 @@
 #include <assert.h>
 #include "queue.h"
 
+struct queue { 
+    int ini, end, total;
+    void *queue[SIZE_QUEUE];
+};
+
 queue_t *createQueue(){
     queue_t *p = (queue_t *)malloc(sizeof(queue_t));
     assert(p != NULL);
@@ -15,9 +20,9 @@ queue_t *createQueue(){
 void printQueue(queue_t *p){
     while (!isEmpty(p))
     {
-        elem x;
+        void *x;
         x = remove_elem(p);
-        printf("%d ", x);
+        printf("%c ", *(char *)x);
     }
     printf("\n");
 }
@@ -42,7 +47,7 @@ int isEmpty(queue_t *p){
     return 0;
 }
 
-int insert(queue_t *p, elem x){
+int insert(queue_t *p, void *x){
     assert(p != NULL);
 
     if(isFull(p) == 1)
@@ -54,14 +59,12 @@ int insert(queue_t *p, elem x){
     return 1;
 }
 
-elem remove_elem(queue_t *p){
+void *remove_elem(queue_t *p){
     assert(p != NULL);
-
-    if(isEmpty(p) == 1)
-        return -1;
+    assert(isEmpty(p) != 1);
 
     p->total--;
-    elem value = p->queue[p->ini];
+    void *value = p->queue[p->ini];
     p->ini = (p->ini+1) % SIZE_QUEUE;
     return value;
 }

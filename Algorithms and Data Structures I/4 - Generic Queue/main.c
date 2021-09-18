@@ -2,7 +2,7 @@
  *   Author: Lucas da Silva Claros
  *   nUSP: 12682592
  *   Create Time: 06/09/2021 15:50
- *   Modified time: 17/09/2021 02:19
+ *   Modified time: 18/09/2021 04:09
  *   Description: 
  *      Learning about Stack with decimal to binary conversion
  */
@@ -11,21 +11,33 @@
 #include <stdlib.h>
 #include "queue.h"
 
-int read_command(elem *);
+int read_command(int *);
 
 int main(){
-    elem c;
     queue_t *p = createQueue();
-    while (read_command(&c))
-        insert(p, c);
-    printQueue(p);
+    int *c = malloc(SIZE_QUEUE*sizeof(int));
+    for (int i = 0; i < SIZE_QUEUE; i++)
+    {
+        c[i] = i;
+        insert(p, &c[i]);
+    }
+    
+    while (!isEmpty(p))
+    {
+        void *x;
+        x = remove_elem(p);
+        printf("%d ", *(int *)x);
+    }
+    printf("\n");
+    free(c);
     destroy(p);
     return 0;
 }
 
 
-int read_command(elem *c){
+int read_command(int *c){
     scanf(" %d", c); 
-    if (*c == -1)
+    if (*c == '0')
         return 0;
+    return 1;
 }
