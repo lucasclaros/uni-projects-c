@@ -2,14 +2,14 @@
  *   Author: Lucas da Silva Claros
  *   nUSP: 12682592
  *   Create Time: 06/09/2021 15:50
- *   Modified time: 18/09/2021 04:09
+ *   Modified time: 20/09/2021 01:13
  *   Description: 
  *      Learning about Stack with decimal to binary conversion
  */
 
+#include "queue.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "queue.h"
 
 int read_command(int *);
 

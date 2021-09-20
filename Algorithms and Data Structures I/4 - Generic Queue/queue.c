@@ -1,7 +1,7 @@
+#include "queue.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "queue.h"
 
 struct queue { 
     int ini, end, total;
