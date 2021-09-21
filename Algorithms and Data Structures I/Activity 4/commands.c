@@ -10,6 +10,8 @@ char *read_line(){
     char *linha = NULL;
     while((c=getchar()) != '\n' && c != EOF)
     {
+        if (c == '\r') continue;
+        
         linha = realloc(linha, (k+1) * sizeof(char));
         linha[k++] = c;
     }
@@ -39,16 +41,17 @@ int queueAppend(commands_t *commands, int index){
     if (p == NULL)
         return -1;
     
-    char *aux = strtok(commands->linesInput[index], " \n");
+    char *aux = NULL;
+    aux = strtok(commands->linesInput[index], " \r\n");
 
-    aux = strtok(NULL, " \n");
+    aux = strtok(NULL, " \r\n");
     p->name = aux;
 
-    aux = strtok(NULL, " \n");
-    p->age = atoi(aux);
+    aux = strtok(NULL, " \r\n");
+    if (aux != NULL) p->age = atoi(aux);
 
-    aux = strtok(NULL, " \n");
-    p->prio = atoi(aux);
+    aux = strtok(NULL, " \r\n");
+    if (aux != NULL) p->prio = atoi(aux);
 
     if (p->age >= 60)
     {   
@@ -60,6 +63,7 @@ int queueAppend(commands_t *commands, int index){
         queueInsert(commands->main_queue[NORMAL_1], p);
     else
         queueInsert(commands->main_queue[NORMAL_0], p);
+    
     return 1;
 }
 

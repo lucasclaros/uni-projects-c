@@ -9,11 +9,17 @@ queue_t *queueCreate(){
     q->ini = 0;
     q->end = 0;
     q->total = 0;
+    q->queue = malloc(SIZE_QUEUE * sizeof(void *));
     return q; 
 }
 
 void queueDestroy(queue_t *q){
-    if(q != NULL) free(q);
+    assert(q != NULL);
+    for (int i = 0; i < q->total; i++)
+        free(q->queue[i]);
+     
+    free(q->queue);
+    free(q);
 }
 
 int queueisFull(queue_t *q){

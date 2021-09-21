@@ -2,7 +2,7 @@
 
 typedef struct Queue { 
     int ini, end, total;
-    void *queue[SIZE_QUEUE];
+    void **queue;
 } queue_t;
 
 /**
