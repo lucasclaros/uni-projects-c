@@ -42,6 +42,7 @@ int queueNext(commands_t *commands){
         {
             person_t *person = queueRemove(commands->main_queue[i]);
             printf("%s %d %d\n", person->name, person->age, person->prio);
+            personDestroy(person);
             return 1;
         }
     }
