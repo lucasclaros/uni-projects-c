@@ -2,7 +2,7 @@
  *   Author: Lucas da Silva Claros
  *   nUSP: 12682592
  *   Create Time: 19/09/2021 22:30
- *   Modified time: 21/09/2021 04:35
+ *   Modified time: 22/09/2021 21:04
  *   Description: Priority Queues
  */
 
@@ -17,8 +17,8 @@ int main(){
     for (int i = 0; i < QUEUES; i++)
         commands->main_queue[i] = queueCreate();
     
-    scanf("%d", &commands->nLines);
-    getchar();
+    scanf(" %d", &commands->nLines);
+    getchar(); getchar(); // \r\n remove
     commands->linesInput = malloc(commands->nLines * sizeof(char *));
 
     for (int i = 0; i < commands->nLines; i++)
@@ -27,7 +27,12 @@ int main(){
     commandsDecider(commands);
 
     for (int i = 0; i < QUEUES; i++)
+    {
+
+        while (!queueisEmpty(commands->main_queue[i]))
+            personDestroy((person_t *)queueRemove(commands->main_queue[i]));
         queueDestroy(commands->main_queue[i]);
+    }
 
     for (int i = 0; i < commands->nLines; i++)
         free(commands->linesInput[i]);

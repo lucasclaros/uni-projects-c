@@ -1,15 +1,16 @@
 name = ex4
-objects = main.o commands.o queue.o
-files = main.c commands.c queue.c
+headers = queue.h commands.h
+files = commands.c main.c queue.c
+objects = commands.o main.o queue.o
 
-commands.h : main.o commands.o
-queue.h : main.o queue.o
+$(headers): $(objects)
 
-files:
-	gcc -c -Wall $(files) -g
-
-all : files $(objects)
+all : $(objects)
+	gcc -c $(files) -g
 	gcc -o $(name) $(objects) -g
 
 run : all
 	./$(name)
+
+zip : 
+	zip -r $(name) $(headers) $(files) Makefile
