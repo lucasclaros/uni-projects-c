@@ -1,41 +1,37 @@
+/**
+ *   Author: Lucas da Silva Claros
+ *   nUSP: 12682592
+ *   Create Time: 21/09/2021 04:53
+ *   Modified time: 26/09/2021 18:36
+ *   Description: Replacing Strings
+ */
+
 #include "commands.h"
 #include "queue.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct Messages
-{
-    char *phrase, *target, *subs;
-    bool isEOF;
-    queue_t *queue;
-} messages_t;
-
 int main(){
-    messages_t *m = malloc(sizeof(messages_t));
-    m->isEOF = FALSE;
-    m->queue = queueCreate();
-    while (!m->isEOF)
+
+    queue_t *q = queueCreate();
+    bool isEOF = FALSE;
+    while (!isEOF)
     {
-        char *aux = NULL;
-        m->phrase = read_line(&m->isEOF);
-        m->target = read_line(&m->isEOF);
-        m->subs = read_line(&m->isEOF);
-        aux = strstr(m->phrase, m->target);
-        while (aux != NULL)
-        {
-            strncpy(aux, m->subs, strlen(m->target));
-            aux = strstr(m->phrase, m->target);
-        }
-        queueInsert(m->queue, m->phrase);
+        message_t *m = messageCreate();
+        isEOF = readMessages(m);
+        char *finalMessage = strsub(m->phrase, m->target, m->sub);
+        queueInsert(q, finalMessage);
+        messageDestroy(m);
     }
-    while (!queueisEmpty(m->queue))
+
+    while (!queueisEmpty(q))
     {
-        char *x = (char *)queueRemove(m->queue);
+        char *x = queueRemove(q);
         printf("%s\n", x);
+        free(x);
     }
-    
-    queueDestroy(m->queue);
-    free(m);
+
+    queueDestroy(q);
     return 0;
 }

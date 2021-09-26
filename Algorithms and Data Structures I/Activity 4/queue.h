@@ -1,3 +1,11 @@
+/**
+ *   Author: Lucas da Silva Claros
+ *   nUSP: 12682592
+ *   Create Time: 19/09/2021 22:30
+ *   Modified time: 26/09/2021 18:33
+ *   Description: Queue Header
+ */
+
 #define SIZE_QUEUE 100
 
 typedef struct Queue { 

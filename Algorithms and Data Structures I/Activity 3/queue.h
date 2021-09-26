@@ -7,6 +7,8 @@ typedef struct Queue {
 
 /**
  *  Initializes a queue, all variables setted
+ * 
+ * @return: queuet * address
  */
 queue_t *queueCreate();
 
