@@ -1,7 +1,7 @@
 name = ex1
-headers = queue.h commands.h
-files = commands.c main.c queue.c
-objects = commands.o main.o queue.o
+headers = commands.h
+files = commands.c main.c
+objects = commands.o main.o
 
 $(headers): $(objects)
 
