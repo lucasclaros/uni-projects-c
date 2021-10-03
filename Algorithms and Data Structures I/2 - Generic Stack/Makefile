@@ -1,11 +1,16 @@
-objects = stack.o main.o
+name = stack
+headers = stack.h
+files = main.c stack.c
+objects = main.o stack.o
 
-stack : $(objects)
-	gcc -o stack $(objects)
+$(headers): $(objects)
 
+all : $(objects)
+	gcc -c $(files) -g
+	gcc -o $(name) $(objects) -g
 
-stack.o : stack.h
-main.o  : stack.h
+run : all
+	./$(name)
 
-clean : 
-	rm *.o 
+zip : 
+	zip -r $(name) $(headers) $(files) Makefile

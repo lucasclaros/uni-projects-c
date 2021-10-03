@@ -7,14 +7,19 @@
 struct stack { 
     int top;
     void **stack;
+    int elementSize;
 };
 
-stack_t *create(){
+stack_t *create(int elementSize){
     stack_t *p = (stack_t *)malloc(sizeof(stack_t));
     assert(p != NULL);
 
-    p->stack = NULL;
+    p->stack = (void **)malloc(sizeof(void *) * SIZE_STACK);
+    assert(p->stack != NULL);
+
     p->top = -1;
+    p->elementSize = elementSize;
+
     return p; 
 }
 
@@ -23,10 +28,13 @@ void destroy(stack_t *p){
     while (!isEmpty(p))
     {
         free(p->stack[p->top]);
+        p->stack[p->top] = NULL;
         p->top--;
     }
-    free(p->stack);
-    free(p);
+    if(p->stack != NULL) free(p->stack);
+    if(p != NULL) free(p);
+    p = NULL;
+
 }
 
 int isFull(stack_t *p){
@@ -50,34 +58,35 @@ int isEmpty(stack_t *p){
 int push(stack_t *p, void *x){
     assert(p != NULL);
 
-    if(isFull(p))
+    if(isFull(p) == 1)
         return -1;
 
     p->top++;
-    p->stack = (void **)realloc(p->stack, (p->top+1) * sizeof(void *));
-    assert(p->stack != NULL);
-    p->stack[p->top] = x;
+    p->stack[p->top] = (void *)malloc(p->elementSize);
+    assert(p->stack[p->top] != NULL);
+
+    memcpy(p->stack[p->top], x, p->elementSize);
     return 1;
 }
 
-void *pop(stack_t *p){
-    assert(p != NULL);
-
-    if(isEmpty(p))
-        return NULL;
-
-    void *x = p->stack[p->top];
-    p->top--;
-    p->stack = (void **)realloc(p->stack, (p->top+1) * sizeof(void *));
-    return x;
-}
-
-int top(stack_t *p, void **x){
+int pop(stack_t *p, void *x){
     assert(p != NULL);
 
     if(isEmpty(p) == 1)
         return -1;
 
-    *x = p->stack[p->top];
+    memcpy(x, p->stack[p->top], p->elementSize);
+    free(p->stack[p->top]);
+    p->top--;
+    return 1;
+}
+
+int top(stack_t *p, void *x){
+    assert(p != NULL);
+
+    if(isEmpty(p) == 1)
+        return -1;
+
+    memcpy(x, p->stack[p->top], p->elementSize);
     return 1;
 }
