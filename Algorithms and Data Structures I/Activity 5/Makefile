@@ -1,7 +1,7 @@
 name = ex5
-headers = stack.h
-files = main.c stack.c
-objects = main.o stack.o
+headers = stack.h commands.h
+files = main.c stack.c commands.c
+objects = main.o stack.o commands.o
 
 $(headers): $(objects)
 

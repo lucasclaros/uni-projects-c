@@ -1,3 +1,10 @@
+/**
+ *   Author: Lucas da Silva Claros
+ *   nUSP: 12682592
+ *   Create Time: 03/10/2021 13:56
+ *   Modified time: 09/10/2021 19:09
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,17 +69,17 @@ elem pop(stack_t *p){
         return -1;
 
     elem x = p->stack[p->top];
+    p->stack = (elem *)realloc(p->stack, p->top * sizeof(elem));
     p->top--;
-    p->stack = (elem *)realloc(p->stack, (p->top+1) * sizeof(elem));
     return x;
 }
 
-int top(stack_t *p, elem *x){
+elem top(stack_t *p){
     assert(p != NULL);
 
     if(isEmpty(p) == 1)
         return -1;
 
-    *x = p->stack[p->top];
-    return 1;
+    elem x = p->stack[p->top];
+    return x;
 }
