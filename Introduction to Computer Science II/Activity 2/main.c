@@ -3,7 +3,7 @@
  *   nUSP: 12682592
  *   Course: SCC0201
  *   Create Time: 12/10/2021 10:16
- *   Modified time: 15/10/2021 22:31
+ *   Modified time: 18/10/2021 17:35
  *   Description: WAV Compression
  */
 
@@ -22,7 +22,7 @@ int main(){
     DFT(audio);
     sortByMagnitude(audio);
     printAudio(audio);
-    createNewAudio(audio);
+    //createNewAudio(audio);
     destroyAudio(audio);
     return 0;
 }

@@ -3,7 +3,7 @@
  *   nUSP: 12682592
  *   Course: SCC0201
  *   Create Time: 12/10/2021 10:16
- *   Modified time: 18/10/2021 15:09
+ *   Modified time: 18/10/2021 17:27
  */
 
 #include "commands.h"
@@ -195,9 +195,11 @@ void createNewAudio(audio_t *audio){
     FILE *newAudio = fopen("new_audio.wav", "wb");
     uchar buf44[44];
 
-    fread(buf44, 44, 1, originalAudio);
+    fread(buf44, sizeof(uchar), 44, originalAudio);
     fwrite(buf44, 1, sizeof(buf44), newAudio);
-    fwrite(audio->samples, 1, audio->dataSize, newAudio);
+    for (int i = 0; i < audio->dataSize; i++)
+        fwrite(&audio->samples[i].c, sizeof(uchar), 1, newAudio);
+    
     fclose(originalAudio);
     fclose(newAudio);
     free(newTransAudio);
