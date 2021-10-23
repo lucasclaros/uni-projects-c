@@ -3,18 +3,20 @@
  *   nUSP: 12682592
  *   Course: SCC0201
  *   Create Time: 12/10/2021 10:16
- *   Modified time: 18/10/2021 17:27
+ *   Modified time: 18/10/2021 18:00
  */
 
 #include "commands.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include <complex.h>
 #include <math.h>
 #include <errno.h>
 
-struct sample{
+struct sample
+{
     uchar c;
     double complex tc;
     double complex magnitude;
@@ -52,6 +54,7 @@ void read_audio(audio_t *audio) {
     audio->dataSize = buf4[0] | buf4[1]<<8 | buf4[2]<<16 | buf4[3]<<24;
 
     audio->samples = (sample_t *) malloc(sizeof(sample_t) * (audio->dataSize));
+    assert(audio->samples != NULL);
     
     int j = 0;
     while (j < audio->dataSize) {
@@ -68,7 +71,7 @@ void DFT(audio_t *audio) {
             audio->samples[k].tc += audio->samples[n].c * cexp((-2.0 * M_PI * (((k+1) * n * 1.0) / (audio->dataSize * 1.0))) * _Complex_I);
         }
 		if (creal(audio->samples[k].tc) <= 0.0 && cimag(audio->samples[k].tc) <= 0.0) audio->zeroCoef++;
-        audio->samples[k].magnitude = getMagnitude(audio->samples[k].tc);
+        audio->samples[k].magnitude = cabs(audio->samples[k].tc);
     }
 }
 
@@ -85,14 +88,9 @@ uchar *IDFT(audio_t *audio) {
     return coef;
 }
 
-double complex getMagnitude(double complex number){
-    double a = pow(creal(number), 2.0);
-    double b = pow(cimag(number), 2.0);
-    return sqrt(a + b);
-}
-
 audio_t *createAudio(char *filename, int nCoef){
     audio_t *a = malloc(sizeof(audio_t));
+    assert(a != NULL);
 	a->zeroCoef = 0;
     a->filename = filename;
     a->nCoef = nCoef;
