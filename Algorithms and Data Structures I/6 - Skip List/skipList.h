@@ -1,40 +1,32 @@
 /**
  *   Author: Lucas da Silva Claros
  *   nUSP: 12682592
- *   Create Time: 29/09/2021 22:30
- *   Modified time: 09/10/2021 23:04
- *   Description:  List Header
+ *   Create Time: 06/11/2021 03:19
+ *   Modified time: 08/11/2021 23:02
+ *   Description:  Skip List Header
  */
 
-#define MAX_SIZE_LIST 100
+#define MAX_LEVELS 256
 #define FIRST -1
 #define LAST   1
 #define MIDDLE 0
 
 typedef enum bool { FALSE, TRUE } bool;
-typedef struct List list_t;
+typedef struct skipList sl_t;
 typedef struct Node node_t;
 typedef int type;
 
 /**
  *  Initializes a list, all variables setted
  */
-list_t *listCreate();
+sl_t *slCreate();
 
 /**
  *  Deallocates list pointer 
  * 
  * @param list: list pointer 
  */
-void listDestroy (list_t *list);
-
-/**
- *  Get next item in list
- * 
- * @param list: list pointer
- * @return: void * item address
- */
-int listRemove (list_t *list, type x);
+void slDestroy (sl_t *list);
 
 /**
  *  Checks if the list is full
@@ -43,7 +35,7 @@ int listRemove (list_t *list, type x);
  * @return: 1 - full
  *          0 - not full
  */
-int  listisFull  (list_t *list);
+int  slisFull  (sl_t *list);
 
 /**
  *  Checks if the list is empty
@@ -52,19 +44,10 @@ int  listisFull  (list_t *list);
  * @return: 1 - empty
  *          0 - not empty
  */
-int  listisEmpty (list_t *list);
+int  slisEmpty (sl_t *list);
 
-/**
- *  Inserts an item in list
- * 
- * @param list: list pointer
- * @param item: item address
- * @return: 1 - all good
- *         -1 - list full
- */
-int  listInsert  (list_t *list, type item);
-
-void  listPrint  (list_t *l);
-node_t  *listSearchElement  (list_t *list, type x);
-int listElementPosition  (node_t *);
-void listRemoveMultiples(list_t *);
+node_t *slCreateNode(type data, int level, node_t *next, node_t *down);
+int slRemove(sl_t *l, type data);
+int slInsert(sl_t *l, type data);
+type slSearch(sl_t *l, type data);
+int flipCoin(int maxValue);
