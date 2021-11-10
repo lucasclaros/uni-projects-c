@@ -2,7 +2,7 @@
  *   Author: Lucas da Silva Claros
  *   nUSP: 12682592
  *   Create Time: 06/11/2021 03:19
- *   Modified time: 08/11/2021 23:15
+ *   Modified time: 10/11/2021 06:54
  */
 
 #include "skipList.h"
@@ -13,69 +13,64 @@
 
 struct Node { 
     type data;
-    int level;
-    struct Node *next, *down;
+    struct Node **next;
 };
 
 struct skipList { 
-    int level, maxLevel, elements;
+    int level, maxLevel;
     struct Node *header; 
 };
 
 
 sl_t *slCreate(){
-    sl_t *l = (sl_t *)malloc(sizeof(sl_t));
-    if (l == NULL) return NULL;
-    l->elements = 0;
-    l->level = 0;
-    l->maxLevel = MAX_LEVELS;
-    l->header = slCreateNode(-1, 0, NULL, NULL);
-    return l; 
+    sl_t *sl = (sl_t *)malloc(sizeof(sl_t));
+    if (sl == NULL) return NULL;
+    sl->level = 0;
+    sl->maxLevel = MAX_LEVELS;
+    sl->header = slCreateNode(-1, 0);
+    return sl; 
 }
 
-void slDestroy(sl_t *l){
-    node_t *layer = l->header;
-    while (layer != NULL)
+void slDestroy(sl_t *sl){
+    node_t *sentinel = sl->header->next[0], *aux;
+    while (sentinel != NULL)
     {
-        layer = layer->down;
-        node_t *curr = l->header;
-        while (curr != NULL)
-        {
-            l->header = l->header->next;
-            free(curr);
-            curr = l->header;
-        }
+        aux = sentinel;
+        sentinel = sentinel->next[0];
+        free(aux->next);
+        free(aux);
     }
-    free(l);
+    free(sl->header->next);
+    free(sl->header);
+    free(sl);
 }
 
-int slisEmpty(sl_t *l){
-    if (l->elements == 0) return 1;
-    else return 0;
-}
-
-node_t *slCreateNode(type data, int level, node_t *next, node_t *down){
+node_t *slCreateNode(type data, int level){
     node_t *newNode = malloc(sizeof(node_t));
     if (newNode == NULL) return NULL;
 
     newNode->data = data;    
-    newNode->level = level;
-    newNode->next = next;
-    newNode->down = down;
-
+    newNode->next = malloc(sizeof(node_t) * (level+1));
+    for (int i = 0; i < (level+1); i++)
+        newNode->next[i] = NULL;
+    
     return newNode;
 }
 
-int flipCoin(int maxValue){
+int generateLevel(int maxValue){
     srand(time(NULL));
-    int num = (unsigned int)(rand() % maxValue);
-    if ((num % 2) == 0) return 1;
-    else return 0;
+    int num = (int) rand() / maxValue;
+    int level = 0;
+    while ((num % 2 == 0) && num < maxValue)
+    {
+        level++; 
+        num = (int) rand() / maxValue;
+    }
+    return level;
 }
 
-
 /**
- *  Sentinel runs through all layers above layer 0 (starting from each layer header)
+ *  Sentinel runs through all layers above layer 0 (starting from each layer upleft)
  * checking if data of the next nodes are less than the actual value of search. Once
  * it found a greater value (or reached the end), it drops one level till level 0.
  * When level 0 is reached, search begins again. If value was found returns TRUE, 
@@ -83,129 +78,116 @@ int flipCoin(int maxValue){
  * 
  * 
  */
-type slSearch(sl_t *l, type data){
-    if (l == NULL) return FALSE;
+type slSearch(sl_t *sl, type data){
+    if (sl == NULL) return FALSE;
     //
-    node_t *sentinel = l->header;
-    while (sentinel != NULL && sentinel->level != 0)
+    node_t *sentinel = sl->header;
+    for (int i = sl->level; i >= 0; i--)
     {
-        while (sentinel->next != NULL && sentinel->next->data < data)
-            sentinel = sentinel->next;
-        sentinel = sentinel->down; 
+        while (sentinel->next[i] != NULL && (sentinel->next[i]->data < data))
+            sentinel = sentinel->next[i];
     }
+    sentinel = sentinel->next[0];
 
-    while (sentinel->next != NULL && sentinel->next->data < data)
-        sentinel = sentinel->next;
-
-    if (sentinel->next != NULL && sentinel->next->data == data) return sentinel->next->data; 
+    if (sentinel != NULL && sentinel->data == data) return sentinel->data; 
     else return -1;
-
 }
 
 /**
- *  Sentinel runs through all layers above layer 0 (starting from each layer header)
+ *  Sentinel runs through all layers above layer 0 (starting from each layer upleft)
  * checking if data of the next nodes are less than the actual value of search. Once
  * it found a greater value (or reached the end), it drops one level till level 0
  * updating the node's vector that keeps track of previous node to insert the data.
  * When level 0 is reached, search begins again till find the right position to insert.
  * Thenceforth, it creates a newNode with data for each existing level adding up a new
- * level (with a new header and node) if necessary.
+ * level (with a new upleft and node) if necessary.
  * 
  * 
  */
-int slInsert(sl_t *l, type data){
+int slInsert(sl_t *sl, type data){
+    // check if word exist
+    if (slSearch(sl, data) != -1) return 0;
 
-    node_t *sentinel = l->header;
-    node_t *updates[l->maxLevel];
-    int nodeLevel = 0;
-    while(flipCoin(l->maxLevel) == 1) nodeLevel++;
-    nodeLevel %= l->maxLevel;
+    node_t *sentinel = sl->header;
+    node_t *updates[sl->maxLevel+1];
 
-    if (slisEmpty(l))
-        updates[sentinel->level] = sentinel;
-    else 
+    for (int i = sl->level; i >= 0; i--)
     {
-        // check if word exist
-        if (slSearch(l, data) != -1) return 0;
+        while (sentinel->next[i] != NULL && (sentinel->next[i]->data < data))
+            sentinel = sentinel->next[i];
+        updates[i] = sentinel;
+    }
 
-        while (sentinel != NULL && sentinel->level != 0)
+    sentinel = sentinel->next[0];
+
+    if (sentinel == NULL || sentinel->data != data) 
+    {
+        int nodeLevel = generateLevel(sl->maxLevel);
+        node_t *newNode = slCreateNode(data, nodeLevel);
+
+        if (nodeLevel > sl->level)
         {
-            while (sentinel->next != NULL && sentinel->next->data < data)
-                sentinel = sentinel->next;
-            updates[sentinel->level] = sentinel;
-            sentinel = sentinel->down; 
+            sl->header->next = realloc(sl->header->next, (nodeLevel+1) * sizeof(node_t));
+            for (int i = (sl->level+1); i <= nodeLevel; i++)
+                updates[i] = sl->header;
+
+            sl->level = nodeLevel; 
+        }
+
+        for (int i = 0; i <= nodeLevel; i++)
+        {
+            newNode->next[i] = updates[i]->next[i];
+            updates[i]->next[i] = newNode;
+        }
+    }
+    return 1;
+}
+
+int slRemove(sl_t *sl, type data){
+    // check if word exist
+    if (slSearch(sl, data) == -1) return 0;
+
+    node_t *sentinel = sl->header;
+    node_t *updates[sl->maxLevel+1];
+
+    for (int i = sl->level; i >= 0; i--)
+    {
+        while (sentinel->next[i] != NULL && (sentinel->next[i]->data < data))
+            sentinel = sentinel->next[i];
+        updates[i] = sentinel;
+    }
+    sentinel = sentinel->next[0];
+
+    if (sentinel != NULL && sentinel->data == data) 
+    {
+        for (int i = 0; i <= sl->level; i++)
+        {
+            if (updates[i]->next[i] != sentinel)
+                break;
+            updates[i]->next[i] = sentinel->next[i];
         }
         
-        while (sentinel->next != NULL && sentinel->next->data < data)
-            sentinel = sentinel->next;
-        updates[sentinel->level] = sentinel;
-    }
-
-    int currLevel = 0;
-    while (currLevel <= nodeLevel && currLevel <= l->level)
-    {
-        node_t *newNode = slCreateNode(data, currLevel, NULL, NULL);
-        newNode->next = updates[currLevel]->next;
-
-        if (currLevel != 0)
-            newNode->down = updates[currLevel-1]->next;
-
-        updates[currLevel]->next = newNode;
-        currLevel++;
-    }
-    
-    if (nodeLevel > l->level)
-    {
-        for (int i = (l->level+1); i <= nodeLevel; i++)
+        while (sl->level > 0 && sl->header->next[sl->level] == NULL)
         {
-            node_t *newNode = slCreateNode(data, i, NULL, updates[i-1]->next);
-            node_t *newHeader = slCreateNode(-1, i, newNode, l->header);
-            l->header = newHeader;
-            updates[i] = newHeader;
+            sl->header = realloc(sl->header, sl->level * sizeof(node_t));
+            sl->level--; 
         }
-        l->level = nodeLevel;
+
+        free(sentinel->next);
+        free(sentinel);
     }
-    l->elements++;
     return 1;
 }
 
 
-int slRemove(sl_t *l, type data){
-    if (slisEmpty(l) || (slSearch(l, data) == -1)) return 0;
 
-    node_t *sentinel = l->header;
-    node_t *updates[l->maxLevel];
+void slPrint(sl_t *sl){
+    node_t *sentinel = sl->header->next[0];
+    while (sentinel != NULL)
+    {
+       printf("%d ", sentinel->data); 
+       sentinel = sentinel->next[0];
+    }
+    printf("\n"); 
 
-    while (sentinel != NULL && sentinel->level != 0)
-    {
-        while (sentinel->next != NULL && sentinel->next->data < data)
-            sentinel = sentinel->next;
-        updates[sentinel->level] = sentinel;
-        sentinel = sentinel->down; 
-    }
-    
-    while (sentinel->next != NULL && sentinel->next->data < data)
-        sentinel = sentinel->next;
-    updates[sentinel->level] = sentinel;
-
-    int currLevel = 0;
-    while (currLevel <= l->level)
-    {
-        if (updates[currLevel]->next != NULL && updates[currLevel]->next->data == data)
-        {
-            node_t *rem = updates[currLevel]->next;
-            updates[currLevel]->next = rem->next;
-            free(rem);
-        }
-        currLevel++;
-    }
-    l->elements--;
-    while (l->elements > 0 && l->header->next == NULL)
-    {
-        node_t *rem = l->header;
-        l->header = l->header->down;
-        l->level--;
-        free(rem);
-    }
-    return 1; 
 }

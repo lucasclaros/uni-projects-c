@@ -6,12 +6,11 @@
 
 int main(){
     sl_t *sl = slCreate();
-    int isEOF = 1;
-    while (isEOF)
+    bool isEOF = FALSE;
+    while (!isEOF)
     {
         isEOF = operationDecider(sl);
-    }
-    
+    } 
     slDestroy(sl);
     return 0;
 }
