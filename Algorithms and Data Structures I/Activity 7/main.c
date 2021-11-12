@@ -1,16 +1,16 @@
 #include "commands.h"
-#include "list.h"
+#include "skipList.h"
 #include <stdio.h>
 #include <stdlib.h>
 
+
 int main(){
-    list_t *l = listCreate();
-    char action[10];
-    while (scanf("%s", action) != EOF)
+    sl_t *sl = slCreate();
+    bool isEOF = FALSE;
+    while (!isEOF)
     {
-        getchar();
-        checkAction(action, l);
-    }
-    listDestroy(l);
+        isEOF = operationDecider(sl);
+    } 
+    slDestroy(sl);
     return 0;
 }

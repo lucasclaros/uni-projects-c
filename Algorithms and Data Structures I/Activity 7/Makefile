@@ -1,7 +1,7 @@
 name = ex7
-headers = list.h commands.h
-files = main.c list.c commands.c
-objects = main.o list.o commands.o
+headers = skipList.h commands.h
+files = main.c skipList.c commands.c
+objects = main.o skipList.o commands.o
 
 $(headers): $(objects)
 
