@@ -1,4 +1,4 @@
-#include "commands.h"
+#include "listPoly.h"
 #include "list.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,11 +30,13 @@ char *read_line(){
 poly_t *polynomialCreate(int numPol){
     poly_t *p = malloc(sizeof(poly_t));
     assert(p != NULL);
+
     p->polynomials = malloc(numPol * sizeof(list_t *));
     assert(p->polynomials != NULL);
     p->finalPoly = listCreate();
     assert(p->finalPoly != NULL);
     p->numPol = numPol;
+
     return p;
 }
 

@@ -1,7 +1,7 @@
 name = ex8
-headers = list.h commands.h
-files = main.c list.c commands.c
-objects = main.o list.o commands.o
+headers = list.h listPoly.h
+files = main.c list.c listPoly.c
+objects = main.o list.o listPoly.o
 
 $(headers): $(objects)
 

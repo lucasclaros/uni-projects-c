@@ -2,7 +2,7 @@
  *   Author: Lucas da Silva Claros
  *   nUSP: 12682592
  *   Create Time: 29/09/2021 09:11
- *   Modified time: 05/11/2021 05:01
+ *   Modified time: 14/11/2021 15:23
  */
 
 #include "list.h"
@@ -81,10 +81,10 @@ int listInsert(list_t *l, type x){
 }
 
 int listRemove(list_t *l, type x){
-    if (l == NULL || listisEmpty(l)) return -1;
+    if (l == NULL || listisEmpty(l)) return 0;
 
     node_t *result = listSearchElement(l, x);
-    if (result == NULL) return -2;
+    if (result == NULL) return -1;
 
     int position = listElementPosition(result);
 
@@ -139,11 +139,14 @@ node_t *listSearchElement(list_t *l, type x){
     return NULL;
 }
 
-void listCopy(list_t *src, list_t *dest){
+int listCopy(list_t *src, list_t *dest){
+    if (src == NULL) return 0;
     node_t *curr = src->start;
 
     for (; curr != NULL; curr = curr->next)
         listInsert(dest, curr->x);
+    
+    return 1;
 }
 
 void listSumNodes(list_t *src, list_t *dest){
@@ -163,7 +166,6 @@ void listSumNodes(list_t *src, list_t *dest){
                 dest_index->x += src_index->x; 
                 dest_index = dest_index->next;
             }
-                
             src_index = src_index->next;
         }
     }

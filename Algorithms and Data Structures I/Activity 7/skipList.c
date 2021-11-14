@@ -2,7 +2,7 @@
  *   Author: Lucas da Silva Claros
  *   nUSP: 12682592
  *   Create Time: 06/11/2021 03:19
- *   Modified time: 12/11/2021 19:20
+ *   Modified time: 14/11/2021 16:10
  */
 
 #include "commands.h"
@@ -68,17 +68,8 @@ int generateLevel(){
     return MIN(level, MAX_LEVELS);
 }
 
-/**
- *  Sentinel runs through all layers above layer 0 (starting from each layer upleft)
- * checking if data of the next nodes are less than the actual value of search. Once
- * it found a greater value (or reached the end), it drops one level till level 0.
- * When level 0 is reached, search begins again. If value was found returns TRUE, 
- * otherwise returns FALSE.
- * 
- * 
- */
-type slSearch(sl_t *sl, type data){
-    if (sl == NULL) return FALSE;
+node_t *slSearch(sl_t *sl, type data){
+    if (sl == NULL) return NULL;
 
     node_t *sentinel = sl->header;
     for (int i = sl->level; i >= 0; i--)
@@ -88,7 +79,7 @@ type slSearch(sl_t *sl, type data){
     }
     sentinel = sentinel->next[0];
 
-    if (sentinel != NULL && (checkContent(sentinel->data, data) == -1)) return sentinel->data; 
+    if (sentinel != NULL && (checkContent(sentinel->data, data) == -1)) return sentinel; 
     else return NULL;
 }
 

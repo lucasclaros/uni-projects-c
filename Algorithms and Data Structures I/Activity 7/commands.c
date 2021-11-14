@@ -7,23 +7,22 @@
 
 struct Entry
 {
-    char *word;
+    char *name;
     int id;
 };
 
-
-entry_t *createEntry(char *word, int id){
+entry_t *createEntry(char *name, int id){
     entry_t *e = malloc(sizeof(entry_t));
     if (e == NULL) return NULL; 
 
-    e->word = word;
+    e->name = name;
     e->id = id;
     return e;
 }
 
 void entryDestroy(entry_t *e){
     if (e == NULL) return;
-    free(e->word);
+    free(e->name);
     free(e);
 }
 
@@ -56,10 +55,10 @@ char *readLine(bool *isEOF){
 }
 
 void entryInsert(sl_t *sl, char *infos){
-    char *aux = strtok(infos, " ");
-    int id = strtol(aux, NULL, 10);
+    char *aux = strtok(infos, " "); //first "word" is the id
+    int id = strtol(aux, NULL, 10); // char* to int
 
-    aux = strtok(NULL, "\n");
+    aux = strtok(NULL, "\n"); //remaining data is the name
     char *name = malloc((strlen(aux)+1) * sizeof(char));
     strcpy(name, aux);
 
@@ -83,14 +82,14 @@ void entryRemove(sl_t *sl, char *infos){
 }
 
 void entryPrintOne(entry_t *e){
-    printf("%d, %s; ", e->id, e->word);
+    printf("%d, %s; ", e->id, e->name);
 }
 
 bool operationDecider(sl_t *sl){
     bool isEOF = FALSE;
     char *line = readLine(&isEOF);
-    char *operation = strtok(line, " ");
-    char *infos= strtok(NULL, "\n");
+    char *operation = strtok(line, " "); //first word is the operation
+    char *infos= strtok(NULL, "\n"); //the remaining data is stored
 
     if (strcmp(operation, "INSERE") == 0)
         entryInsert(sl, infos);
