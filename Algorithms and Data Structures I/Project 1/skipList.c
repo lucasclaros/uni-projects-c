@@ -2,7 +2,7 @@
  *   Author: Lucas da Silva Claros
  *   nUSP: 12682592
  *   Create Time: 06/11/2021 03:19
- *   Modified time: 10/11/2021 10:10
+ *   Modified time: 21/11/2021 23:51
  */
 
 #include "commands.h"
@@ -68,15 +68,6 @@ int generateLevel(){
     return MIN(level, MAX_LEVELS);
 }
 
-/**
- *  Sentinel runs through all layers above layer 0 (starting from each layer upleft)
- * checking if data of the next nodes are less than the actual value of search. Once
- * it found a greater value (or reached the end), it drops one level till level 0.
- * When level 0 is reached, search begins again. If value was found returns TRUE, 
- * otherwise returns FALSE.
- * 
- * 
- */
 type slSearch(sl_t *sl, type data){
     if (sl == NULL) return FALSE;
 
@@ -92,17 +83,6 @@ type slSearch(sl_t *sl, type data){
     else return NULL;
 }
 
-/**
- *  Sentinel runs through all layers above layer 0 (starting from each layer upleft)
- * checking if data of the next nodes are less than the actual value of search. Once
- * it found a greater value (or reached the end), it drops one level till level 0
- * updating the node's vector that keeps track of previous node to insert the data.
- * When level 0 is reached, search begins again till find the right position to insert.
- * Thenceforth, it creates a newNode with data for each existing level adding up a new
- * level (with a new upleft and node) if necessary.
- * 
- * 
- */
 int slInsert(sl_t *sl, type data){
     // check if word exist
     if (slSearch(sl, data) != NULL) return 0;
@@ -178,6 +158,7 @@ int slRemove(sl_t *sl, type data){
             sl->level--; 
         }
 
+        entryDestroy(sentinel->data);
         free(sentinel->next);
         free(sentinel);
     }

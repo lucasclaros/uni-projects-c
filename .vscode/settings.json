@@ -3,8 +3,10 @@
     "vva.trustedDomain": false,
     "files.associations": {
         "stdlib.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "typeinfo": "c"
     },
     "C_Cpp.errorSquiggles": "Enabled",
-    "C_Cpp.intelliSenseEngineFallback": "Disabled"
+    "C_Cpp.intelliSenseEngineFallback": "Disabled",
+    "cmake.configureOnOpen": false
 }

@@ -2,7 +2,7 @@
  *   Author: Lucas da Silva Claros
  *   nUSP: 12682592
  *   Create Time: 06/11/2021 03:19
- *   Modified time: 14/11/2021 16:10
+ *   Modified time: 14/11/2021 17:35
  */
 
 #include "commands.h"
@@ -168,7 +168,7 @@ int slRemove(sl_t *sl, type data){
         {
             sl->level--; 
         }
-
+        entryDestroy(sentinel->data);
         free(sentinel->next);
         free(sentinel);
     }
