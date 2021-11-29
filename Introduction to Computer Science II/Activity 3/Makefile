@@ -1,6 +1,7 @@
 name = ac3
-files = main.c
-objects = main.o
+headers = list.h commands.h
+files = main.c list.c commands.c
+objects = main.o list.o commands.o
 
 $(headers): $(objects)
 
