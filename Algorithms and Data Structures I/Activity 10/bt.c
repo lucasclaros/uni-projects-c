@@ -148,3 +148,20 @@ int btreeInsertRight(btree_t *t, type x, type parent){
 int btreeRemove(btree_t *t){
     return 0;
 }
+
+int btreeSumNodes(node_t *root){
+    assert(root != NULL);
+    int left, right;
+
+    if (root->left == NULL || root->right == NULL)
+        return root->data;
+        
+    left = btreeSumNodes(root->left);
+    right = btreeSumNodes(root->right);
+
+    if (root->data == (left+right))
+        return root->data;
+    else
+        return 0;
+
+}

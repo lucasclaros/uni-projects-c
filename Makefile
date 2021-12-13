@@ -1,7 +1,7 @@
-name = ac10
-headers = bt.h 
-files = main.c bt.c
-objects = main.o bt.o
+name = teste
+headers = 
+files = testes.c 
+objects = testes.o
 
 $(headers): $(objects)
 
