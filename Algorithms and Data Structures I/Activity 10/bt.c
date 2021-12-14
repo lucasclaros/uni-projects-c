@@ -105,7 +105,7 @@ int btreeInsertLeft(btree_t *t, type x, type parent){
     }else
     {
         node_t *aux = btreeSearch(t->root, parent);
-        if (aux != NULL && aux->left == NULL) 
+        if (aux != NULL && aux->left == NULL && aux->data != x) 
             aux->left = p;
         else
         {
@@ -133,7 +133,7 @@ int btreeInsertRight(btree_t *t, type x, type parent){
     }else
     {
         node_t *aux = btreeSearch(t->root, parent);
-        if (aux != NULL && aux->right == NULL) 
+        if (aux != NULL && aux->right == NULL && aux->data != x) 
             aux->right = p;
         else
         {
@@ -143,10 +143,6 @@ int btreeInsertRight(btree_t *t, type x, type parent){
     }
 
     return 1;
-}
-
-int btreeRemove(btree_t *t){
-    return 0;
 }
 
 int btreeSumNodes(node_t *root){
@@ -165,3 +161,4 @@ int btreeSumNodes(node_t *root){
         return 0;
 
 }
+

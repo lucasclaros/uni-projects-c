@@ -15,6 +15,4 @@ node_t *btreeSearch(node_t *root, type x);
 node_t *btreeSearchParent(node_t *root, type x);
 int btreeInsertLeft(btree_t *t, type x, type parent);
 int btreeInsertRight(btree_t *t, type x, type parent);
-int btreeRemove(btree_t *t);
 int btreeSumNodes(node_t *root);
-
