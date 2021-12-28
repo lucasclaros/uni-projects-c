@@ -12,8 +12,10 @@ int main(){
     treapInsert(&t->root, 40, 4);
     treapInsert(&t->root, 70, 10);
     treapInsert(&t->root, 50, 15);
-    treapInsert(&t->root, 20, 8);
+    treapInsert(&t->root, 20, 18);
     treapPrintPreorder(t->root);
+    printf("\n");
+    printLevelOrder(t->root);
     printf("\n");
     treapRemove(&t->root, 50);
     treapPrintInorder(t->root);

@@ -1,10 +1,10 @@
 #include "commands.h"
-#include "bst.h"
+#include "treap.h"
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <string.h> 
 
-bool operationDecider(bstree_t *t){
+bool operationDecider(treap_t *t){
     bool isEOF = FALSE;
     char *line = readLine(&isEOF);
     char *operation = strtok(line, " "); //first word is the operation
@@ -14,25 +14,48 @@ bool operationDecider(bstree_t *t){
         entryInsert(t, infos);
     else if (strcmp(operation, "impressao") == 0)
         entryPrint(t, infos);
+    else if (strcmp(operation, "remocao") == 0)
+        entryRemove(t, infos);
+    else
+        entrySearch(t, infos);
 
     free(line);
     return isEOF;
 }
 
-void entryInsert(bstree_t *t, char *infos){
-    int data = strtol(infos, NULL, 10); // char* to int
-    bstreeInsert(&t->root, data);
+void entryInsert(treap_t *t, char *infos){
+    char *aux = strtok(infos, " ");
+    int data = strtol(aux, NULL, 10); // char* to int
+    aux = strtok(NULL, " ");
+    int prio = strtol(aux, NULL, 10); 
+    treapInsert(&t->root, data, prio);
 }
 
-void entryPrint(bstree_t *t, char *infos){
-    if (!bstreeEmpty(t))
+void entryRemove(treap_t *t, char *infos){
+    int data = strtol(infos, NULL, 10);
+    if (treapRemove(&t->root, data) == 0)
+        printf("Chave nao localizada\n");
+}
+
+void entrySearch(treap_t *t, char *infos){
+    int data = strtol(infos, NULL, 10); 
+    if (treapSearch(t->root, data) != NULL)
+        printf("1\n");
+    else
+        printf("0\n");
+}
+
+void entryPrint(treap_t *t, char *infos){
+    if (!treapEmpty(t))
     {
-        if (strcmp(infos, "pre-ordem") == 0)
-            bstreePrintPreorder(t->root);
-        else if (strcmp(infos, "pos-ordem") == 0)
-            bstreePrintPostorder(t->root);
+        if (strcmp(infos, "preordem") == 0)
+            treapPrintPreorder(t->root);
+        else if (strcmp(infos, "posordem") == 0)
+            treapPrintPostorder(t->root);
+        else if (strcmp(infos, "ordem") == 0)
+            treapPrintInorder(t->root);
         else
-            bstreePrintInorder(t->root);
+            printLevelOrder(t->root);
     }else
         printf("VAZIA");
     printf("\n");

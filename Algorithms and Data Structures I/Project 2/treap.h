@@ -19,3 +19,5 @@ void treapPrintInorder(node_t *root);
 void treapPrintPostorder(node_t *root);
 node_t *treapLeftRotate(node_t *n);
 node_t *treapRightRotate(node_t *n);
+void printLevelOrder(node_t* root);
+void printCurrentLevel(node_t* root, int level);

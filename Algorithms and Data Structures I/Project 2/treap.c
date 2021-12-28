@@ -78,7 +78,10 @@ int treapInsert(node_t **root, type x, int prio){
         (*root) = createNode(x, prio);
         return 1;
     }else if ((*root)->data == x) 
+    {
+        printf("Elemento ja existente\n");
         return 0; 
+    }
     else if (x < (*root)->data) 
     {
         int result = treapInsert(&(*root)->left, x, prio);
@@ -113,14 +116,10 @@ int treapRemove(node_t **root, type x){
         node_t *aux = (*root)->left;
         free((*root));
         *root = aux;
-    }else if ((*root)->left->prio < (*root)->right->prio)
-    {
-        (*root) = treapLeftRotate((*root));
-        return treapRemove(&(*root)->left, x);
     }else
     {
         (*root) = treapLeftRotate((*root));
-        return treapRemove(&(*root)->right, x);
+        return treapRemove(&(*root)->left, x);
     }
 }
 
@@ -165,3 +164,23 @@ node_t *treapRightRotate(node_t *n){
     return aux;
 }
 
+void printLevelOrder(node_t* root)
+{
+    int h = treapHeight(root);
+    int i;
+    for (i = 1; i <= h; i++)
+        printCurrentLevel(root, i);
+}
+ 
+/* Print nodes at a current level */
+void printCurrentLevel(node_t* root, int level)
+{
+    if (root == NULL)
+        return;
+    if (level == 1)
+        printf("(%d, %d) ", root->data, root->prio);
+    else if (level > 1) {
+        printCurrentLevel(root->left, level - 1);
+        printCurrentLevel(root->right, level - 1);
+    }
+}

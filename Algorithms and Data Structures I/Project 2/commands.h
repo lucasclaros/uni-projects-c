@@ -5,3 +5,5 @@ bool operationDecider(bstree_t *t);
 char *readLine(bool *isEOF);
 void entryInsert(bstree_t *t, char *infos);
 void entryPrint(bstree_t *t, char *infos);
+void entryRemove(bstree_t *t, char *infos);
+void entrySearch(bstree_t *t, char *infos);

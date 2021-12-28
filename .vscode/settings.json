@@ -5,7 +5,8 @@
         "stdlib.h": "c",
         "stdio.h": "c",
         "typeinfo": "c",
-        "commands.h": "c"
+        "commands.h": "c",
+        "bst.h": "c"
     },
     "C_Cpp.errorSquiggles": "Enabled",
     "C_Cpp.intelliSenseEngineFallback": "Disabled",
